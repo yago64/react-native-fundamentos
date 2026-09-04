@@ -1,11 +1,11 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-export function HeaderCadastro() {
+export function HeaderCadastro({ titulo = 'Cadastro de Usuário', subtitulo = 'Crie sua conta no GamerVault' }: { titulo?: string; subtitulo?: string }) {
   return (
     <View style={styles.container}>
-      <Text style={styles.titulo}>Cadastro de Usuário</Text>
-      <Text style={styles.subtitulo}>Crie sua conta no GamerVault</Text>
+      <Text style={styles.titulo}>{titulo}</Text>
+      {subtitulo ? <Text style={styles.subtitulo}>{subtitulo}</Text> : null}
     </View>
   );
 }

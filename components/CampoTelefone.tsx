@@ -1,11 +1,11 @@
 import React from 'react';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 
-export function CampoTelefone() {
+export function CampoTelefone({ value, onChangeText }: { value: string; onChangeText: (value: string) => void }) {
   return (
     <View style={styles.container}>
       <Text style={styles.label}>Telefone</Text>
-      <TextInput style={styles.input} placeholder="(61) 99999-9999" keyboardType="phone-pad" placeholderTextColor="#888" />
+      <TextInput value={value} onChangeText={onChangeText} style={styles.input} placeholder="(61) 99999-9999" keyboardType="phone-pad" placeholderTextColor="#888" />
     </View>
   );
 }

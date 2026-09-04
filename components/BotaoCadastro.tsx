@@ -1,16 +1,18 @@
 import React from 'react';
 import { Alert, Button, Platform, StyleSheet, View } from 'react-native';
 
-export function BotaoCadastro() {
+export function BotaoCadastro({ onPress }: { onPress: () => void }) {
   const handlePress = () => {
     const msg = 'Cadastro realizado com sucesso!';
 
     if (Platform.OS === 'web') {
       alert(msg);
+      onPress();
       return;
     }
 
     Alert.alert('Sucesso', msg);
+    onPress();
   };
 
   return (

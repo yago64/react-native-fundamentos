@@ -7,21 +7,33 @@ import { CampoNome } from '@/components/CampoNome';
 import { CampoSenha } from '@/components/CampoSenha';
 import { CampoTelefone } from '@/components/CampoTelefone';
 import { HeaderCadastro } from '@/components/HeaderCadastro';
-import React from 'react';
+import { useUser } from '@/context/UserContext';
+import { useRouter } from 'expo-router';
+import React, { useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
 export default function CadastroScreen() {
+  const router = useRouter();
+  const { saveUser } = useUser();
+  const [form, setForm] = useState({ nome: '', email: '', telefone: '', dataNascimento: '', cpf: '' });
+  const updateField = (field: keyof typeof form) => (value: string) => setForm((current) => ({ ...current, [field]: value }));
+
+  const handleCadastro = () => {
+    saveUser(form);
+    router.push('/perfil');
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <HeaderCadastro />
 
       <View style={styles.secaoCard}>
         <Text style={styles.tituloSecao}>Dados Pessoais</Text>
-        <CampoNome />
-        <CampoEmail />
-        <CampoTelefone />
-        <CampoDataNascimento />
-        <CampoCpf />
+        <CampoNome value={form.nome} onChangeText={updateField('nome')} />
+        <CampoEmail value={form.email} onChangeText={updateField('email')} />
+        <CampoTelefone value={form.telefone} onChangeText={updateField('telefone')} />
+        <CampoDataNascimento value={form.dataNascimento} onChangeText={updateField('dataNascimento')} />
+        <CampoCpf value={form.cpf} onChangeText={updateField('cpf')} />
       </View>
 
       <View style={styles.secaoCard}>
@@ -30,7 +42,7 @@ export default function CadastroScreen() {
         <CampoConfirmarSenha />
       </View>
 
-      <BotaoCadastro />
+      <BotaoCadastro onPress={handleCadastro} />
     </ScrollView>
   );
 }

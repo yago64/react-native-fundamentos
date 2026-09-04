@@ -1,11 +1,11 @@
 import React from 'react';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 
-export function CampoEmail() {
+export function CampoEmail({ value, onChangeText }: { value: string; onChangeText: (value: string) => void }) {
   return (
     <View style={styles.container}>
       <Text style={styles.label}>E-mail</Text>
-      <TextInput style={styles.input} placeholder="exemplo@email.com" keyboardType="email-address" autoCapitalize="none" placeholderTextColor="#888" />
+      <TextInput value={value} onChangeText={onChangeText} style={styles.input} placeholder="exemplo@email.com" keyboardType="email-address" autoCapitalize="none" placeholderTextColor="#888" />
     </View>
   );
 }
