@@ -1,51 +1,107 @@
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useUser } from '@/context/UserContext';
-import React from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+
+const JOGOS_INICIAIS = [
+  { id: '1', nome: 'Elden Ring', status: 'Jogando', imagem: 'https://picsum.photos/200/200?random=1', curtido: true },
+  { id: '2', nome: 'The Witcher 3', status: 'Concluído', imagem: 'https://picsum.photos/200/200?random=2', curtido: false },
+  { id: '3', nome: 'Cyberpunk 2077', status: 'Pausado', imagem: 'https://picsum.photos/200/200?random=3', curtido: true },
+];
+
+const PROMOCAO = { titulo: 'GTA V: Premium Edition', desconto: '60% OFF', preco: 'R$ 59,90' };
+const LANCAMENTO = { titulo: 'Monster Hunter Wilds', data: 'Em breve', categoria: 'Ação / RPG' };
 
 export default function PerfilScreen() {
   const { user } = useUser();
+  const [jogos, setJogos] = useState(JOGOS_INICIAIS);
 
-  if (!user) {
-    return (
-      <View style={styles.emptyContainer}>
-        <Text style={styles.emptyTitle}>Nenhum perfil cadastrado</Text>
-        <Text style={styles.emptySubtitle}>Acesse a aba Cadastro para preencher seus dados.</Text>
-      </View>
+  const toggleCurtida = (id: string) => {
+    setJogos((prev) =>
+      prev.map((item) => (item.id === id ? { ...item, curtido: !item.curtido } : item))
     );
-  }
+  };
 
-  // Pega a primeira letra do nome para o avatar
-  const inicial = user.nome ? user.nome.charAt(0).toUpperCase() : 'U';
+  const inicial = user?.nome ? user.nome.charAt(0).toUpperCase() : 'G';
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {/* Header com Avatar */}
+      {/* 1. Cabecalho com Avatar */}
       <View style={styles.avatarContainer}>
         <View style={styles.avatar}>
           <Text style={styles.avatarText}>{inicial}</Text>
         </View>
-        <Text style={styles.userName}>{user.nome}</Text>
-        <Text style={styles.userEmail}>{user.email}</Text>
+        <Text style={styles.userName}>{user?.nome || 'Gamer Convidado'}</Text>
+        <Text style={styles.userEmail}>{user?.email || 'gamer@vault.com'}</Text>
       </View>
 
-      {/* Cartão de Informações */}
+      {/* 2. Cartao de Informacoes Pessoais do Usuario */}
       <View style={styles.card}>
         <Text style={styles.cardTitle}>Informações Pessoais</Text>
 
         <View style={styles.infoRow}>
           <Text style={styles.infoLabel}>Telefone</Text>
-          <Text style={styles.infoValue}>{user.telefone || 'Não informado'}</Text>
+          <Text style={styles.infoValue}>{user?.telefone || 'Não informado'}</Text>
         </View>
 
         <View style={styles.infoRow}>
           <Text style={styles.infoLabel}>Nascimento</Text>
-          <Text style={styles.infoValue}>{user.dataNascimento || 'Não informado'}</Text>
+          <Text style={styles.infoValue}>{user?.dataNascimento || 'Não informado'}</Text>
         </View>
 
         <View style={styles.infoRow}>
           <Text style={styles.infoLabel}>CPF</Text>
-          <Text style={styles.infoValue}>{user.cpf || 'Não informado'}</Text>
+          <Text style={styles.infoValue}>{user?.cpf || 'Não informado'}</Text>
         </View>
+      </View>
+
+      {/* 3. Jogos Jogados Recentemente (Abaixo do perfil) */}
+      <View style={styles.card}>
+        <Text style={styles.cardTitle}>Jogos Recentes</Text>
+
+        {jogos.map((item) => (
+          <View key={item.id} style={styles.jogoRow}>
+            <Image source={{ uri: item.imagem }} style={styles.jogoImagem} />
+
+            <View style={styles.jogoInfo}>
+              <Text style={styles.jogoNome}>{item.nome}</Text>
+              <View style={[styles.badge, item.status === 'Jogando' ? styles.badgeJogando : styles.badgeOutro]}>
+                <Text style={styles.badgeText}>{item.status}</Text>
+              </View>
+            </View>
+
+            <TouchableOpacity onPress={() => toggleCurtida(item.id)} style={styles.coracaoButton}>
+              <Ionicons
+                name={item.curtido ? 'heart' : 'heart-outline'}
+                size={24}
+                color={item.curtido ? '#EF4444' : '#94A3B8'}
+              />
+            </TouchableOpacity>
+          </View>
+        ))}
+      </View>
+
+      {/* 4. Promocoes e Destaques */}
+      <View style={[styles.card, styles.cardDestaque]}>
+        <View style={styles.destaqueHeader}>
+          <Ionicons name="pricetag" size={18} color="#10B981" />
+          <Text style={styles.destaqueTitle}>Promoção em Destaque</Text>
+        </View>
+        <Text style={styles.gameTitle}>{PROMOCAO.titulo}</Text>
+        <View style={styles.precoRow}>
+          <Text style={styles.descontoTag}>{PROMOCAO.desconto}</Text>
+          <Text style={styles.precoText}>{PROMOCAO.preco}</Text>
+        </View>
+      </View>
+
+      {/* 5. Proximo Lancamento */}
+      <View style={styles.card}>
+        <View style={styles.destaqueHeader}>
+          <Ionicons name="rocket" size={18} color="#4F46E5" />
+          <Text style={styles.destaqueTitle}>Próximo Lançamento</Text>
+        </View>
+        <Text style={styles.gameTitle}>{LANCAMENTO.titulo}</Text>
+        <Text style={styles.subtext}>{LANCAMENTO.categoria} • {LANCAMENTO.data}</Text>
       </View>
     </ScrollView>
   );
@@ -53,17 +109,31 @@ export default function PerfilScreen() {
 
 const styles = StyleSheet.create({
   container: { padding: 20, paddingTop: 50, backgroundColor: '#F8FAFC' },
-  emptyContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20, backgroundColor: '#F8FAFC' },
-  emptyTitle: { fontSize: 20, fontWeight: '700', color: '#1E293B', marginBottom: 8 },
-  emptySubtitle: { fontSize: 14, color: '#64748B', textAlign: 'center' },
-  avatarContainer: { alignItems: 'center', marginBottom: 24 },
-  avatar: { width: 84, height: 84, borderRadius: 42, backgroundColor: '#4F46E5', justifyContent: 'center', alignItems: 'center', marginBottom: 12 },
-  avatarText: { fontSize: 36, fontWeight: 'bold', color: '#FFFFFF' },
+  avatarContainer: { alignItems: 'center', marginBottom: 20 },
+  avatar: { width: 80, height: 80, borderRadius: 40, backgroundColor: '#4F46E5', justifyContent: 'center', alignItems: 'center', marginBottom: 8 },
+  avatarText: { fontSize: 32, fontWeight: 'bold', color: '#FFFFFF' },
   userName: { fontSize: 22, fontWeight: '800', color: '#0F172A' },
-  userEmail: { fontSize: 14, color: '#64748B', marginTop: 2 },
-  card: { backgroundColor: '#FFFFFF', borderRadius: 16, padding: 20, borderWidth: 1, borderColor: '#E2E8F0' },
-  cardTitle: { fontSize: 16, fontWeight: '700', color: '#1E293B', marginBottom: 16, borderBottomWidth: 1, borderBottomColor: '#F1F5F9', paddingBottom: 8 },
-  infoRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: '#F8FAFC' },
+  userEmail: { fontSize: 13, color: '#64748B' },
+  card: { backgroundColor: '#FFFFFF', borderRadius: 16, padding: 18, marginBottom: 16, borderWidth: 1, borderColor: '#E2E8F0' },
+  cardTitle: { fontSize: 16, fontWeight: '700', color: '#1E293B', marginBottom: 12, borderBottomWidth: 1, borderBottomColor: '#F1F5F9', paddingBottom: 6 },
+  infoRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 8, borderBottomWidth: 1, borderBottomColor: '#F8FAFC' },
   infoLabel: { fontSize: 14, color: '#64748B', fontWeight: '500' },
   infoValue: { fontSize: 14, color: '#0F172A', fontWeight: '600' },
+  jogoRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 12 },
+  jogoImagem: { width: 48, height: 48, borderRadius: 8, backgroundColor: '#CBD5E1' },
+  jogoInfo: { flex: 1, marginLeft: 12 },
+  jogoNome: { fontSize: 15, fontWeight: '600', color: '#0F172A' },
+  badge: { alignSelf: 'flex-start', paddingHorizontal: 8, paddingVertical: 2, borderRadius: 6, marginTop: 4 },
+  badgeJogando: { backgroundColor: '#EEF2FF' },
+  badgeOutro: { backgroundColor: '#F1F5F9' },
+  badgeText: { fontSize: 11, fontWeight: '600', color: '#4F46E5' },
+  coracaoButton: { padding: 6 },
+  cardDestaque: { borderColor: '#10B981', borderWidth: 1.5 },
+  destaqueHeader: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 6 },
+  destaqueTitle: { fontSize: 12, fontWeight: '700', color: '#64748B', textTransform: 'uppercase' },
+  gameTitle: { fontSize: 16, fontWeight: '800', color: '#0F172A' },
+  precoRow: { flexDirection: 'row', alignItems: 'center', gap: 10, marginTop: 6 },
+  descontoTag: { backgroundColor: '#10B981', color: '#FFF', paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4, fontWeight: '700', fontSize: 12 },
+  precoText: { fontSize: 16, fontWeight: '700', color: '#0F172A' },
+  subtext: { fontSize: 13, color: '#64748B', marginTop: 2 },
 });
