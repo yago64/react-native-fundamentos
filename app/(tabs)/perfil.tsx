@@ -3,14 +3,43 @@ import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from 'rea
 import { Ionicons } from '@expo/vector-icons';
 import { useUser } from '@/context/UserContext';
 
+
 const JOGOS_INICIAIS = [
-  { id: '1', nome: 'Elden Ring', status: 'Jogando', imagem: 'https://picsum.photos/200/200?random=1', curtido: true },
-  { id: '2', nome: 'The Witcher 3', status: 'Concluído', imagem: 'https://picsum.photos/200/200?random=2', curtido: false },
-  { id: '3', nome: 'Cyberpunk 2077', status: 'Pausado', imagem: 'https://picsum.photos/200/200?random=3', curtido: true },
+  {
+    id: '1',
+    nome: 'Elden Ring',
+    status: 'Jogando',
+    imagem: 'https://image.api.playstation.com/vulcan/ap/rnd/202110/2000/aA212P20A4532B0301072.png',
+    curtido: true,
+  },
+  {
+    id: '2',
+    nome: 'The Witcher 3',
+    status: 'Concluído',
+    imagem: 'https://image.api.playstation.com/vulcan/ap/rnd/202211/0711/8k5o6zX8x0f3uB2.png',
+    curtido: false,
+  },
+  {
+    id: '3',
+    nome: 'Cyberpunk 2077',
+    status: 'Pausado',
+    imagem: 'https://image.api.playstation.com/vulcan/ap/rnd/202311/2812/c869b325992984fb68e3bd26b801a6be1d4b6ec6fb14ba0d.png',
+    curtido: true,
+  },
 ];
 
-const PROMOCAO = { titulo: 'GTA V: Premium Edition', desconto: '60% OFF', preco: 'R$ 59,90' };
-const LANCAMENTO = { titulo: 'Monster Hunter Wilds', data: 'Em breve', categoria: 'Ação / RPG' };
+const PROMOCAO = {
+  titulo: 'GTA V: Premium Edition',
+  desconto: '60% OFF',
+  preco: 'R$ 59,90',
+  imagem: 'https://image.api.playstation.com/vulcan/img/rnd/202011/1020/Iq8yXq7t1Z9lG8d5.png',
+};
+
+const LANCAMENTO = {
+  titulo: 'Monster Hunter Wilds',
+  data: '2025',
+  categoria: 'Ação / RPG',
+};
 
 export default function PerfilScreen() {
   const { user } = useUser();
@@ -26,7 +55,6 @@ export default function PerfilScreen() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {/* 1. Cabecalho com Avatar */}
       <View style={styles.avatarContainer}>
         <View style={styles.avatar}>
           <Text style={styles.avatarText}>{inicial}</Text>
@@ -35,7 +63,6 @@ export default function PerfilScreen() {
         <Text style={styles.userEmail}>{user?.email || 'gamer@vault.com'}</Text>
       </View>
 
-      {/* 2. Cartao de Informacoes Pessoais do Usuario */}
       <View style={styles.card}>
         <Text style={styles.cardTitle}>Informações Pessoais</Text>
 
@@ -55,7 +82,6 @@ export default function PerfilScreen() {
         </View>
       </View>
 
-      {/* 3. Jogos Jogados Recentemente (Abaixo do perfil) */}
       <View style={styles.card}>
         <Text style={styles.cardTitle}>Jogos Recentes</Text>
 
@@ -81,20 +107,23 @@ export default function PerfilScreen() {
         ))}
       </View>
 
-      {/* 4. Promocoes e Destaques */}
       <View style={[styles.card, styles.cardDestaque]}>
         <View style={styles.destaqueHeader}>
           <Ionicons name="pricetag" size={18} color="#10B981" />
           <Text style={styles.destaqueTitle}>Promoção em Destaque</Text>
         </View>
-        <Text style={styles.gameTitle}>{PROMOCAO.titulo}</Text>
-        <View style={styles.precoRow}>
-          <Text style={styles.descontoTag}>{PROMOCAO.desconto}</Text>
-          <Text style={styles.precoText}>{PROMOCAO.preco}</Text>
+        <View style={styles.promoContent}>
+          <Image source={{ uri: PROMOCAO.imagem }} style={styles.promoImagem} />
+          <View style={styles.promoDetails}>
+            <Text style={styles.gameTitle}>{PROMOCAO.titulo}</Text>
+            <View style={styles.precoRow}>
+              <Text style={styles.descontoTag}>{PROMOCAO.desconto}</Text>
+              <Text style={styles.precoText}>{PROMOCAO.preco}</Text>
+            </View>
+          </View>
         </View>
       </View>
 
-      {/* 5. Proximo Lancamento */}
       <View style={styles.card}>
         <View style={styles.destaqueHeader}>
           <Ionicons name="rocket" size={18} color="#4F46E5" />
@@ -120,7 +149,7 @@ const styles = StyleSheet.create({
   infoLabel: { fontSize: 14, color: '#64748B', fontWeight: '500' },
   infoValue: { fontSize: 14, color: '#0F172A', fontWeight: '600' },
   jogoRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 12 },
-  jogoImagem: { width: 48, height: 48, borderRadius: 8, backgroundColor: '#CBD5E1' },
+  jogoImagem: { width: 52, height: 52, borderRadius: 10, backgroundColor: '#E2E8F0' },
   jogoInfo: { flex: 1, marginLeft: 12 },
   jogoNome: { fontSize: 15, fontWeight: '600', color: '#0F172A' },
   badge: { alignSelf: 'flex-start', paddingHorizontal: 8, paddingVertical: 2, borderRadius: 6, marginTop: 4 },
@@ -129,11 +158,14 @@ const styles = StyleSheet.create({
   badgeText: { fontSize: 11, fontWeight: '600', color: '#4F46E5' },
   coracaoButton: { padding: 6 },
   cardDestaque: { borderColor: '#10B981', borderWidth: 1.5 },
-  destaqueHeader: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 6 },
+  destaqueHeader: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 10 },
   destaqueTitle: { fontSize: 12, fontWeight: '700', color: '#64748B', textTransform: 'uppercase' },
+  promoContent: { flexDirection: 'row', alignItems: 'center' },
+  promoImagem: { width: 60, height: 60, borderRadius: 10, marginRight: 12 },
+  promoDetails: { flex: 1 },
   gameTitle: { fontSize: 16, fontWeight: '800', color: '#0F172A' },
-  precoRow: { flexDirection: 'row', alignItems: 'center', gap: 10, marginTop: 6 },
+  precoRow: { flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 4 },
   descontoTag: { backgroundColor: '#10B981', color: '#FFF', paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4, fontWeight: '700', fontSize: 12 },
-  precoText: { fontSize: 16, fontWeight: '700', color: '#0F172A' },
+  precoText: { fontSize: 15, fontWeight: '700', color: '#0F172A' },
   subtext: { fontSize: 13, color: '#64748B', marginTop: 2 },
 });
