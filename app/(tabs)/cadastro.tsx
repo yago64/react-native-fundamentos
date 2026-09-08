@@ -33,12 +33,10 @@ export default function CadastroScreen() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {/* Área do Cabeçalho */}
       <View style={styles.headerArea}>
         <HeaderCadastro />
       </View>
 
-      {/* Seção 1: Dados Pessoais */}
       <View style={styles.secaoCard}>
         <Text style={styles.tituloSecao}>Dados Pessoais</Text>
         <CampoNome value={form.nome} onChangeText={updateField('nome')} />
@@ -48,14 +46,12 @@ export default function CadastroScreen() {
         <CampoCpf value={form.cpf} onChangeText={updateField('cpf')} />
       </View>
 
-      {/* Seção 2: Dados de Acesso */}
       <View style={styles.secaoCard}>
         <Text style={styles.tituloSecao}>Dados de Acesso</Text>
         <CampoSenha />
         <CampoConfirmarSenha />
       </View>
 
-      {/* Área de Ações */}
       <View style={styles.areaAcoes}>
         <BotaoCadastro onPress={handleCadastro} />
       </View>
@@ -63,7 +59,6 @@ export default function CadastroScreen() {
   );
 }
 
-// Estilização focada na organização por espaçamentos
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 20,
