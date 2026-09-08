@@ -47,7 +47,7 @@ export default function CadastroScreen() {
         <Text style={styles.subtitulo}>Crie sua conta para começar</Text>
       </View>
 
-      d<View style={styles.secaoCard}>
+      <View style={styles.secaoCard}>
         <Text style={styles.tituloSecao}>Dados Pessoais</Text>
 
         <Text style={styles.label}>Nome Completo</Text>
