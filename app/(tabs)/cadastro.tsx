@@ -15,8 +15,16 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
 export default function CadastroScreen() {
   const router = useRouter();
   const { saveUser } = useUser();
-  const [form, setForm] = useState({ nome: '', email: '', telefone: '', dataNascimento: '', cpf: '' });
-  const updateField = (field: keyof typeof form) => (value: string) => setForm((current) => ({ ...current, [field]: value }));
+  const [form, setForm] = useState({
+    nome: '',
+    email: '',
+    telefone: '',
+    dataNascimento: '',
+    cpf: '',
+  });
+
+  const updateField = (field: keyof typeof form) => (value: string) =>
+    setForm((current) => ({ ...current, [field]: value }));
 
   const handleCadastro = () => {
     saveUser(form);
@@ -25,7 +33,9 @@ export default function CadastroScreen() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <HeaderCadastro />
+      <View style={styles.headerArea}>
+        <HeaderCadastro />
+      </View>
 
       <View style={styles.secaoCard}>
         <Text style={styles.tituloSecao}>Dados Pessoais</Text>
@@ -42,7 +52,9 @@ export default function CadastroScreen() {
         <CampoConfirmarSenha />
       </View>
 
-      <BotaoCadastro onPress={handleCadastro} />
+      <View style={styles.areaAcoes}>
+        <BotaoCadastro onPress={handleCadastro} />
+      </View>
     </ScrollView>
   );
 }
@@ -51,10 +63,14 @@ const styles = StyleSheet.create({
   container: {
     padding: 16,
     paddingTop: 40,
-    backgroundColor: '#f0f2f5',
+    backgroundColor: '#F8FAFC',
+  },
+  headerArea: {
+    alignItems: 'center',
+    marginBottom: 16,
   },
   secaoCard: {
-    backgroundColor: '#ffffff',
+    backgroundColor: '#FFFFFF',
     borderRadius: 12,
     padding: 16,
     marginBottom: 16,
@@ -67,10 +83,15 @@ const styles = StyleSheet.create({
   tituloSecao: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#6200ee',
+    color: '#4F46E5',
     marginBottom: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderBottomColor: '#F1F5F9',
     paddingBottom: 6,
+  },
+  areaAcoes: {
+    marginTop: 8,
+    marginBottom: 32,
+    justifyContent: 'center',
   },
 });
