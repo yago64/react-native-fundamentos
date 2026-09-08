@@ -49,7 +49,7 @@ export default function CadastroScreen() {
       </View>
 
       {/* 2. Área de Informações Pessoais */}
-      <View style={styles.secaoCard}>
+      d<View style={styles.secaoCard}>
         <Text style={styles.tituloSecao}>Dados Pessoais</Text>
 
         <Text style={styles.label}>Nome Completo</Text>
