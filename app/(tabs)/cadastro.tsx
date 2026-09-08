@@ -33,10 +33,12 @@ export default function CadastroScreen() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      {/* Área do Cabeçalho */}
       <View style={styles.headerArea}>
         <HeaderCadastro />
       </View>
 
+      {/* Seção 1: Dados Pessoais */}
       <View style={styles.secaoCard}>
         <Text style={styles.tituloSecao}>Dados Pessoais</Text>
         <CampoNome value={form.nome} onChangeText={updateField('nome')} />
@@ -46,12 +48,14 @@ export default function CadastroScreen() {
         <CampoCpf value={form.cpf} onChangeText={updateField('cpf')} />
       </View>
 
+      {/* Seção 2: Dados de Acesso */}
       <View style={styles.secaoCard}>
         <Text style={styles.tituloSecao}>Dados de Acesso</Text>
         <CampoSenha />
         <CampoConfirmarSenha />
       </View>
 
+      {/* Área de Ações */}
       <View style={styles.areaAcoes}>
         <BotaoCadastro onPress={handleCadastro} />
       </View>
@@ -59,21 +63,24 @@ export default function CadastroScreen() {
   );
 }
 
+// Estilização focada na organização por espaçamentos
 const styles = StyleSheet.create({
   container: {
-    padding: 16,
-    paddingTop: 40,
+    paddingHorizontal: 20,
+    paddingVertical: 24,
     backgroundColor: '#F8FAFC',
   },
   headerArea: {
     alignItems: 'center',
-    marginBottom: 16,
+    marginTop: 16,
+    marginBottom: 20,
   },
   secaoCard: {
     backgroundColor: '#FFFFFF',
     borderRadius: 12,
-    padding: 16,
-    marginBottom: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 18,
+    marginBottom: 20,
     elevation: 2,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
@@ -84,14 +91,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: '#4F46E5',
-    marginBottom: 12,
+    marginBottom: 16,
+    paddingBottom: 8,
     borderBottomWidth: 1,
     borderBottomColor: '#F1F5F9',
-    paddingBottom: 6,
   },
   areaAcoes: {
     marginTop: 8,
     marginBottom: 32,
-    justifyContent: 'center',
+    marginHorizontal: 4,
   },
 });
