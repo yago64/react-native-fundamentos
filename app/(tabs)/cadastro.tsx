@@ -42,13 +42,11 @@ export default function CadastroScreen() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {/* 1. Área de Título */}
       <View style={styles.headerArea}>
         <Text style={styles.tituloPrincipal}>GamerVault</Text>
         <Text style={styles.subtitulo}>Crie sua conta para começar</Text>
       </View>
 
-      {/* 2. Área de Informações Pessoais */}
       d<View style={styles.secaoCard}>
         <Text style={styles.tituloSecao}>Dados Pessoais</Text>
 
@@ -102,7 +100,6 @@ export default function CadastroScreen() {
         />
       </View>
 
-      {/* 3. Área de Informações de Acesso */}
       <View style={styles.secaoCard}>
         <Text style={styles.tituloSecao}>Dados de Acesso</Text>
 
@@ -127,7 +124,6 @@ export default function CadastroScreen() {
         />
       </View>
 
-      {/* 4. Área de Ações com Flexbox (Cancelar e Cadastrar lado a lado) */}
       <View style={styles.areaAcoes}>
         <TouchableOpacity style={styles.botaoCancelar} onPress={handleCancelar}>
           <Text style={styles.textoBotaoCancelar}>Cancelar</Text>
@@ -141,7 +137,6 @@ export default function CadastroScreen() {
   );
 }
 
-// Estilização concentrada na tela
 const styles = StyleSheet.create({
   container: {
     padding: 20,
@@ -186,7 +181,6 @@ const styles = StyleSheet.create({
     marginBottom: 4,
     marginTop: 8,
   },
-  // Estilo reutilizado em todos os TextInput (Requisitos 5 e 7)
   input: {
     height: 44,
     borderWidth: 1,
@@ -197,7 +191,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#0F172A',
   },
-  // Organização Flexbox em linha para os botões (Requisito 4)
   areaAcoes: {
     flexDirection: 'row',
     justifyContent: 'space-between',
