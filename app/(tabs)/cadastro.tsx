@@ -1,26 +1,29 @@
-import { BotaoCadastro } from '@/components/BotaoCadastro';
-import { CampoConfirmarSenha } from '@/components/CampoConfirmarSenha';
-import { CampoCpf } from '@/components/CampoCpf';
-import { CampoDataNascimento } from '@/components/CampoDataNascimento';
-import { CampoEmail } from '@/components/CampoEmail';
-import { CampoNome } from '@/components/CampoNome';
-import { CampoSenha } from '@/components/CampoSenha';
-import { CampoTelefone } from '@/components/CampoTelefone';
-import { HeaderCadastro } from '@/components/HeaderCadastro';
 import { useUser } from '@/context/UserContext';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import {
+  Alert,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
 export default function CadastroScreen() {
   const router = useRouter();
   const { saveUser } = useUser();
+
   const [form, setForm] = useState({
     nome: '',
     email: '',
     telefone: '',
     dataNascimento: '',
     cpf: '',
+    senha: '',
+    confirmarSenha: '',
   });
 
   const updateField = (field: keyof typeof form) => (value: string) =>
@@ -28,72 +31,205 @@ export default function CadastroScreen() {
 
   const handleCadastro = () => {
     saveUser(form);
+    const msg = 'Cadastro realizado com sucesso!';
+    Platform.OS === 'web' ? alert(msg) : Alert.alert('Sucesso', msg);
     router.push('/perfil');
+  };
+
+  const handleCancelar = () => {
+    router.back();
   };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      {/* 1. Área de Título */}
       <View style={styles.headerArea}>
-        <HeaderCadastro />
+        <Text style={styles.tituloPrincipal}>GamerVault</Text>
+        <Text style={styles.subtitulo}>Crie sua conta para começar</Text>
       </View>
 
+      {/* 2. Área de Informações Pessoais */}
       <View style={styles.secaoCard}>
         <Text style={styles.tituloSecao}>Dados Pessoais</Text>
-        <CampoNome value={form.nome} onChangeText={updateField('nome')} />
-        <CampoEmail value={form.email} onChangeText={updateField('email')} />
-        <CampoTelefone value={form.telefone} onChangeText={updateField('telefone')} />
-        <CampoDataNascimento value={form.dataNascimento} onChangeText={updateField('dataNascimento')} />
-        <CampoCpf value={form.cpf} onChangeText={updateField('cpf')} />
+
+        <Text style={styles.label}>Nome Completo</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Digite seu nome completo"
+          placeholderTextColor="#94A3B8"
+          value={form.nome}
+          onChangeText={updateField('nome')}
+        />
+
+        <Text style={styles.label}>E-mail</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="seu@email.com"
+          placeholderTextColor="#94A3B8"
+          keyboardType="email-address"
+          autoCapitalize="none"
+          value={form.email}
+          onChangeText={updateField('email')}
+        />
+
+        <Text style={styles.label}>Telefone</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="(00) 00000-0000"
+          placeholderTextColor="#94A3B8"
+          keyboardType="phone-pad"
+          value={form.telefone}
+          onChangeText={updateField('telefone')}
+        />
+
+        <Text style={styles.label}>Data de Nascimento</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="DD/MM/AAAA"
+          placeholderTextColor="#94A3B8"
+          value={form.dataNascimento}
+          onChangeText={updateField('dataNascimento')}
+        />
+
+        <Text style={styles.label}>CPF</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="000.000.000-00"
+          placeholderTextColor="#94A3B8"
+          keyboardType="numeric"
+          value={form.cpf}
+          onChangeText={updateField('cpf')}
+        />
       </View>
 
+      {/* 3. Área de Informações de Acesso */}
       <View style={styles.secaoCard}>
         <Text style={styles.tituloSecao}>Dados de Acesso</Text>
-        <CampoSenha />
-        <CampoConfirmarSenha />
+
+        <Text style={styles.label}>Senha</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="••••••••"
+          placeholderTextColor="#94A3B8"
+          secureTextEntry
+          value={form.senha}
+          onChangeText={updateField('senha')}
+        />
+
+        <Text style={styles.label}>Confirmar Senha</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="••••••••"
+          placeholderTextColor="#94A3B8"
+          secureTextEntry
+          value={form.confirmarSenha}
+          onChangeText={updateField('confirmarSenha')}
+        />
       </View>
 
+      {/* 4. Área de Ações com Flexbox (Cancelar e Cadastrar lado a lado) */}
       <View style={styles.areaAcoes}>
-        <BotaoCadastro onPress={handleCadastro} />
+        <TouchableOpacity style={styles.botaoCancelar} onPress={handleCancelar}>
+          <Text style={styles.textoBotaoCancelar}>Cancelar</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.botaoCadastrar} onPress={handleCadastro}>
+          <Text style={styles.textoBotaoCadastrar}>Cadastrar</Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );
 }
 
+// Estilização concentrada na tela
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 20,
-    paddingVertical: 24,
+    padding: 20,
+    paddingTop: 50,
     backgroundColor: '#F8FAFC',
   },
   headerArea: {
     alignItems: 'center',
-    marginTop: 16,
     marginBottom: 20,
+  },
+  tituloPrincipal: {
+    fontSize: 26,
+    fontWeight: '800',
+    color: '#4F46E5',
+  },
+  subtitulo: {
+    fontSize: 14,
+    color: '#64748B',
+    marginTop: 4,
   },
   secaoCard: {
     backgroundColor: '#FFFFFF',
     borderRadius: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 18,
-    marginBottom: 20,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
+    padding: 16,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
   },
   tituloSecao: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: '700',
     color: '#4F46E5',
-    marginBottom: 16,
-    paddingBottom: 8,
+    marginBottom: 12,
     borderBottomWidth: 1,
     borderBottomColor: '#F1F5F9',
+    paddingBottom: 6,
   },
+  label: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#475569',
+    marginBottom: 4,
+    marginTop: 8,
+  },
+  // Estilo reutilizado em todos os TextInput (Requisitos 5 e 7)
+  input: {
+    height: 44,
+    borderWidth: 1,
+    borderColor: '#CBD5E1',
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    backgroundColor: '#FFFFFF',
+    fontSize: 14,
+    color: '#0F172A',
+  },
+  // Organização Flexbox em linha para os botões (Requisito 4)
   areaAcoes: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: 12,
     marginTop: 8,
     marginBottom: 32,
-    marginHorizontal: 4,
+  },
+  botaoCancelar: {
+    flex: 1,
+    height: 48,
+    backgroundColor: '#E2E8F0',
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  botaoCadastrar: {
+    flex: 1,
+    height: 48,
+    backgroundColor: '#4F46E5',
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  textoBotaoCancelar: {
+    color: '#334155',
+    fontSize: 15,
+    fontWeight: '600',
+  },
+  textoBotaoCadastrar: {
+    color: '#FFFFFF',
+    fontSize: 15,
+    fontWeight: '700',
   },
 });
