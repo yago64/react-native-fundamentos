@@ -203,14 +203,17 @@ export default function CadastroScreen() {
           <Text style={styles.textoBotaoCancelar}>Cancelar</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.botaoCadastrar}
-          onPress={handleCadastro}
-          onLongPress={handleLongPressCadastro}
+        <Pressable
+          style={({ pressed }) => [
+            styles.botaoCadastrar,
+            pressed && styles.botaoPressionado,
+          ]}
+          onPress={handlePress}
+          onLongPress={handleLongPress}
           delayLongPress={800}
         >
           <Text style={styles.textoBotaoCadastrar}>Cadastrar</Text>
-        </TouchableOpacity>
+        </Pressable>
       </View>
     </ScrollView>
   );
