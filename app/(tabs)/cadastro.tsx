@@ -29,6 +29,8 @@ export default function CadastroScreen() {
   });
 
   const [campoFocado, setCampoFocado] = useState<string | null>(null);
+
+  // STATE: Armazena o estado da opção dos termos no componente
   const [aceitaTermos, setAceitaTermos] = useState(false);
 
   const handleTextChange = (field: keyof typeof form) => (value: string) => {
@@ -53,6 +55,7 @@ export default function CadastroScreen() {
       }
       return;
     }
+
     saveUser(form);
     const msgSuccess = 'Cadastro realizado com sucesso!';
     if (Platform.OS === 'web') {
@@ -93,6 +96,7 @@ export default function CadastroScreen() {
     router.back();
   };
 
+  // EVENTO: Função chamada ao interagir com o Switch para atualizar o State
   const handleSwitchChange = (value: boolean) => {
     setAceitaTermos(value);
   };
@@ -199,15 +203,15 @@ export default function CadastroScreen() {
 
       <View style={styles.secaoSwitch}>
         <Text style={styles.labelSwitch}>
-        {aceitaTermos ? 'Termos aceitos' : 'Termos não aceitos'}
-    </Text>
-       <Switch
-        value={aceitaTermos}
-        onValueChange={handleSwitchChange}
-        trackColor={{ false: '#CBD5E1', true: '#818CF8' }}
-        thumbColor={aceitaTermos ? '#4F46E5' : '#F1F5F9'}
-      />
-    </View>
+          {aceitaTermos ? 'Termos aceitos' : 'Termos não aceitos'}
+        </Text>
+        <Switch
+          value={aceitaTermos}                // PROP: Recebe o valor armazenado no State
+          onValueChange={handleSwitchChange}  // EVENTO: Recebe a função disparada pela interação
+          trackColor={{ false: '#CBD5E1', true: '#818CF8' }}
+          thumbColor={aceitaTermos ? '#4F46E5' : '#F1F5F9'}
+        />
+      </View>
 
       <View style={styles.areaAcoes}>
         <TouchableOpacity style={styles.botaoCancelar} onPress={handleCancelar}>
