@@ -1,17 +1,18 @@
+import { useUser } from '@/context/UserContext';
+import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import {
+  Alert,
+  Platform,
+  Pressable,
   ScrollView,
   StyleSheet,
+  Switch,
   Text,
   TextInput,
   TouchableOpacity,
   View,
-  Alert,
-  Platform,
-  Switch,
 } from 'react-native';
-import { useRouter } from 'expo-router';
-import { useUser } from '@/context/UserContext';
 
 export default function CadastroScreen() {
   const router = useRouter();
@@ -67,7 +68,7 @@ export default function CadastroScreen() {
     if (Platform.OS === 'web') {
       alert(msg);
     } else {
-      Alert.alert('Modo rapido', msg);
+      Alert.alert('Modo Rápido', msg);
     }
     setForm({
       nome: 'Jogador Exemplo',
@@ -78,6 +79,14 @@ export default function CadastroScreen() {
       senha: '123456',
       confirmarSenha: '123456',
     });
+  };
+
+  const handlePress = () => {
+    handleCadastro();
+  };
+
+  const handleLongPress = () => {
+    handleLongPressCadastro();
   };
 
   const handleCancelar = () => {
@@ -317,6 +326,10 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  botaoPressionado: {
+    opacity: 0.7,
+    transform: [{ scale: 0.98 }],
   },
   textoBotaoCancelar: {
     color: '#334155',
