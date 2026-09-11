@@ -198,14 +198,16 @@ export default function CadastroScreen() {
       </View>
 
       <View style={styles.secaoSwitch}>
-        <Text style={styles.labelSwitch}>Li e concordo com os Termos</Text>
-        <Switch
-          value={aceitaTermos}
-          onValueChange={handleSwitchChange}
-          trackColor={{ false: '#CBD5E1', true: '#818CF8' }}
-          thumbColor={aceitaTermos ? '#4F46E5' : '#F1F5F9'}
-        />
-      </View>
+        <Text style={styles.labelSwitch}>
+        {aceitaTermos ? 'Termos aceitos' : 'Termos não aceitos'}
+    </Text>
+       <Switch
+        value={aceitaTermos}
+        onValueChange={handleSwitchChange}
+        trackColor={{ false: '#CBD5E1', true: '#818CF8' }}
+        thumbColor={aceitaTermos ? '#4F46E5' : '#F1F5F9'}
+      />
+    </View>
 
       <View style={styles.areaAcoes}>
         <TouchableOpacity style={styles.botaoCancelar} onPress={handleCancelar}>
