@@ -1,53 +1,33 @@
-import { useUser } from '@/context/UserContext';
-import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import {
-  Alert,
-  Platform,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Switch,
+  View,
   Text,
   TextInput,
-  TouchableOpacity,
-  View,
+  StyleSheet,
+  Pressable,
+  Switch,
+  Alert,
+  Platform,
+  ScrollView,
 } from 'react-native';
 
 export default function CadastroScreen() {
-  const router = useRouter();
-  const { saveUser } = useUser();
+  // ==========================================
+  // EXEMPLO DE STATE (Item 4, 5, 7 e 9 do Lab)
+  // ==========================================
+  const [nome, setNome] = useState(''); // State para o nome do utilizador
+  const [email, setEmail] = useState(''); // State para o e-mail
+  const [senha, setSenha] = useState(''); // State para a palavra-passe
+  const [aceitaTermos, setAceitaTermos] = useState(false); // State do Switch
+  const [campoAtivo, setCampoAtivo] = useState<string | null>(null); // State de foco
 
-  const [form, setForm] = useState({
-    nome: '',
-    email: '',
-    telefone: '',
-    dataNascimento: '',
-    cpf: '',
-    senha: '',
-    confirmarSenha: '',
-  });
-
-  const [campoFocado, setCampoFocado] = useState<string | null>(null);
-
-  // STATE: Armazena o estado da opção dos termos no componente
-  const [aceitaTermos, setAceitaTermos] = useState(false);
-
-  const handleTextChange = (field: keyof typeof form) => (value: string) => {
-    setForm((current) => ({ ...current, [field]: value }));
-  };
-
-  const handleFocus = (field: string) => () => {
-    setCampoFocado(field);
-  };
-
-  const handleBlur = () => {
-    setCampoFocado(null);
-  };
-
+  // ==========================================
+  // FUNÇÕES DE TRATAMENTO DE EVENTOS (Item 1)
+  // ==========================================
+  // Evento disparado pelo toque simples
   const handleCadastro = () => {
     if (!aceitaTermos) {
-      const msg = 'Você precisa aceitar os termos de uso para continuar.';
+      const msg = 'É necessário aceitar os termos de utilização!';
       if (Platform.OS === 'web') {
         alert(msg);
       } else {
@@ -55,296 +35,119 @@ export default function CadastroScreen() {
       }
       return;
     }
-
-    saveUser(form);
-    const msgSuccess = 'Cadastro realizado com sucesso!';
+    const msgSucesso = `Registo de ${nome} efetuado com sucesso!`;
     if (Platform.OS === 'web') {
-      alert(msgSuccess);
+      alert(msgSucesso);
     } else {
-      Alert.alert('Sucesso', msgSuccess);
+      Alert.alert('Sucesso', msgSucesso);
     }
-    router.push('/perfil');
   };
 
-  const handleLongPressCadastro = () => {
-    const msg = 'Pressão prolongada detectada! Dados preenchidos automaticamente.';
+  // Evento disparado por pressão prolongada
+  const handleLongPress = () => {
+    const msg = 'Pressão prolongada detetada! A preencher dados de teste...';
     if (Platform.OS === 'web') {
       alert(msg);
     } else {
       Alert.alert('Modo Rápido', msg);
     }
-    setForm({
-      nome: 'Jogador Exemplo',
-      email: 'gamer@teste.com',
-      telefone: '(11) 99999-9999',
-      dataNascimento: '01/01/2000',
-      cpf: '123.456.789-00',
-      senha: '123456',
-      confirmarSenha: '123456',
-    });
+    setNome('Jogador Pro');
+    setEmail('jogador@email.com');
+    setSenha('123456');
+    setAceitaTermos(true);
   };
 
-  const handlePress = () => {
-    handleCadastro();
-  };
-
-  const handleLongPress = () => {
-    handleLongPressCadastro();
-  };
-
-  const handleCancelar = () => {
-    router.back();
-  };
-
-  // EVENTO: Função chamada ao interagir com o Switch para atualizar o State
-  const handleSwitchChange = (value: boolean) => {
-    setAceitaTermos(value);
-  };
+  // Tratamento de foco (Item 5)
+  const handleFocus = (campo: string) => () => setCampoAtivo(campo);
+  const handleBlur = () => setCampoAtivo(null);
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.headerArea}>
-        <Text style={styles.tituloPrincipal}>GamerVault</Text>
-        <Text style={styles.subtitulo}>Crie sua conta interativa</Text>
-      </View>
+    <ScrollView style={styles.container}>
+      <Text style={styles.titulo}>Registo de Jogador</Text>
 
-      <View style={styles.secaoCard}>
-        <Text style={styles.tituloSecao}>Dados Pessoais</Text>
+      {/* Campo Nome */}
+      <Text style={styles.label}>
+        Nome {campoAtivo === 'nome' && '(A digitar...)'}
+      </Text>
+      <TextInput
+        // Prop: value recebe o valor armazenado no State
+        value={nome}
+        // Evento: onChangeText recebe a função setNome para atualizar o State
+        onChangeText={setNome}
+        onFocus={handleFocus('nome')}
+        onBlur={handleBlur}
+        placeholder="Digite o seu nome"
+        placeholderTextColor="#64748B"
+        style={[styles.input, campoAtivo === 'nome' && styles.inputFocado]}
+      />
 
-        <Text style={styles.label}>Nome Completo</Text>
-        <TextInput
-          style={[styles.input, campoFocado === 'nome' && styles.inputFocado]}
-          placeholder="Digite seu nome completo"
-          placeholderTextColor="#94A3B8"
-          value={form.nome}
-          onChangeText={handleTextChange('nome')}
-          onFocus={handleFocus('nome')}
-          onBlur={handleBlur}
-        />
+      {/* Campo E-mail */}
+      <Text style={styles.label}>E-mail</Text>
+      <TextInput
+        value={email}
+        onChangeText={setEmail}
+        onFocus={handleFocus('email')}
+        onBlur={handleBlur}
+        placeholder="Digite o seu e-mail"
+        placeholderTextColor="#64748B"
+        keyboardType="email-address"
+        style={[styles.input, campoAtivo === 'email' && styles.inputFocado]}
+      />
 
-        <Text style={styles.label}>E-mail</Text>
-        <TextInput
-          style={[styles.input, campoFocado === 'email' && styles.inputFocado]}
-          placeholder="seu@email.com"
-          placeholderTextColor="#94A3B8"
-          keyboardType="email-address"
-          autoCapitalize="none"
-          value={form.email}
-          onChangeText={handleTextChange('email')}
-          onFocus={handleFocus('email')}
-          onBlur={handleBlur}
-        />
+      {/* Campo Palavra-passe com onSubmitEditing (Item 6) */}
+      <Text style={styles.label}>Palavra-passe</Text>
+      <TextInput
+        value={senha}
+        onChangeText={setSenha}
+        onFocus={handleFocus('senha')}
+        onBlur={handleBlur}
+        // Evento: onSubmitEditing dispara a ação ao pressionar "Concluir" no teclado
+        onSubmitEditing={handleCadastro}
+        placeholder="Digite a sua palavra-passe"
+        placeholderTextColor="#64748B"
+        secureTextEntry
+        style={[styles.input, campoAtivo === 'senha' && styles.inputFocado]}
+      />
 
-        <Text style={styles.label}>Telefone</Text>
-        <TextInput
-          style={[styles.input, campoFocado === 'telefone' && styles.inputFocado]}
-          placeholder="(00) 00000-0000"
-          placeholderTextColor="#94A3B8"
-          keyboardType="phone-pad"
-          value={form.telefone}
-          onChangeText={handleTextChange('telefone')}
-          onFocus={handleFocus('telefone')}
-          onBlur={handleBlur}
-        />
-
-        <Text style={styles.label}>Data de Nascimento</Text>
-        <TextInput
-          style={[styles.input, campoFocado === 'dataNascimento' && styles.inputFocado]}
-          placeholder="DD/MM/AAAA"
-          placeholderTextColor="#94A3B8"
-          value={form.dataNascimento}
-          onChangeText={handleTextChange('dataNascimento')}
-          onFocus={handleFocus('dataNascimento')}
-          onBlur={handleBlur}
-        />
-
-        <Text style={styles.label}>CPF</Text>
-        <TextInput
-          style={[styles.input, campoFocado === 'cpf' && styles.inputFocado]}
-          placeholder="000.000.000-00"
-          placeholderTextColor="#94A3B8"
-          keyboardType="numeric"
-          value={form.cpf}
-          onChangeText={handleTextChange('cpf')}
-          onFocus={handleFocus('cpf')}
-          onBlur={handleBlur}
-        />
-      </View>
-
-      <View style={styles.secaoCard}>
-        <Text style={styles.tituloSecao}>Dados de Acesso</Text>
-
-        <Text style={styles.label}>Senha</Text>
-        <TextInput
-          style={[styles.input, campoFocado === 'senha' && styles.inputFocado]}
-          placeholder="••••••••"
-          placeholderTextColor="#94A3B8"
-          secureTextEntry
-          value={form.senha}
-          onChangeText={handleTextChange('senha')}
-          onFocus={handleFocus('senha')}
-          onBlur={handleBlur}
-        />
-
-        <Text style={styles.label}>Confirmar Senha</Text>
-        <TextInput
-          style={[styles.input, campoFocado === 'confirmarSenha' && styles.inputFocado]}
-          placeholder="••••••••"
-          placeholderTextColor="#94A3B8"
-          secureTextEntry
-          value={form.confirmarSenha}
-          onChangeText={handleTextChange('confirmarSenha')}
-          onFocus={handleFocus('confirmarSenha')}
-          onBlur={handleBlur}
-          returnKeyType="send"
-          onSubmitEditing={handleCadastro}
-        />
-      </View>
-
-      <View style={styles.secaoSwitch}>
-        <Text style={styles.labelSwitch}>
-          {aceitaTermos ? 'Termos aceitos' : 'Termos não aceitos'}
-        </Text>
+      {/* Componente Switch (Item 7) */}
+      <View style={styles.switchArea}>
         <Switch
-          value={aceitaTermos}                // PROP: Recebe o valor armazenado no State
-          onValueChange={handleSwitchChange}  // EVENTO: Recebe a função disparada pela interação
-          trackColor={{ false: '#CBD5E1', true: '#818CF8' }}
-          thumbColor={aceitaTermos ? '#4F46E5' : '#F1F5F9'}
+          value={aceitaTermos}
+          onValueChange={setAceitaTermos}
+          trackColor={{ false: '#334155', true: '#38BDF8' }}
         />
+        <Text style={styles.switchTexto}>
+          {aceitaTermos ? 'Termos aceites' : 'Termos não aceites'}
+        </Text>
       </View>
 
-      <View style={styles.areaAcoes}>
-        <TouchableOpacity style={styles.botaoCancelar} onPress={handleCancelar}>
-          <Text style={styles.textoBotaoCancelar}>Cancelar</Text>
-        </TouchableOpacity>
-
-        <Pressable
-          style={({ pressed }) => [
-            styles.botaoCadastrar,
-            pressed && styles.botaoPressionado,
-          ]}
-          onPress={handlePress}
-          onLongPress={handleLongPress}
-          delayLongPress={800}
-        >
-          <Text style={styles.textoBotaoCadastrar}>Cadastrar</Text>
-        </Pressable>
-      </View>
+      {/* Componente Pressable com onPress e onLongPress (Item 2 e 3) */}
+      {/* NOTA ITEM 8: Usamos onPress={handleCadastro} (passagem da referência). 
+          Se usássemos onPress={handleCadastro()}, a função seria executada imediatamente no render. */}
+      <Pressable
+        style={({ pressed }) => [
+          styles.botao,
+          pressed && styles.botaoPressionado,
+        ]}
+        onPress={handleCadastro}
+        onLongPress={handleLongPress}
+        delayLongPress={800}
+      >
+        <Text style={styles.textoBotao}>Cadastrar (Segure para preenchimento rápido)</Text>
+      </Pressable>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-    paddingTop: 50,
-    backgroundColor: '#F8FAFC',
-  },
-  headerArea: {
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  tituloPrincipal: {
-    fontSize: 26,
-    fontWeight: '800',
-    color: '#4F46E5',
-  },
-  subtitulo: {
-    fontSize: 14,
-    color: '#64748B',
-    marginTop: 4,
-  },
-  secaoCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 16,
-    borderWidth: 1,
-    borderColor: '#E2E8F0',
-  },
-  tituloSecao: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#4F46E5',
-    marginBottom: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#F1F5F9',
-    paddingBottom: 6,
-  },
-  label: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: '#475569',
-    marginBottom: 4,
-    marginTop: 8,
-  },
-  input: {
-    height: 44,
-    borderWidth: 1,
-    borderColor: '#CBD5E1',
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    backgroundColor: '#FFFFFF',
-    fontSize: 14,
-    color: '#0F172A',
-  },
-  inputFocado: {
-    borderColor: '#4F46E5',
-    borderWidth: 2,
-    backgroundColor: '#EEF2FF',
-  },
-  secaoSwitch: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    padding: 14,
-    borderRadius: 12,
-    marginBottom: 16,
-    borderWidth: 1,
-    borderColor: '#E2E8F0',
-  },
-  labelSwitch: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#334155',
-  },
-  areaAcoes: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    gap: 12,
-    marginTop: 8,
-    marginBottom: 32,
-  },
-  botaoCancelar: {
-    flex: 1,
-    height: 48,
-    backgroundColor: '#E2E8F0',
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  botaoCadastrar: {
-    flex: 1,
-    height: 48,
-    backgroundColor: '#4F46E5',
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  botaoPressionado: {
-    opacity: 0.7,
-    transform: [{ scale: 0.98 }],
-  },
-  textoBotaoCancelar: {
-    color: '#334155',
-    fontSize: 15,
-    fontWeight: '600',
-  },
-  textoBotaoCadastrar: {
-    color: '#FFFFFF',
-    fontSize: 15,
-    fontWeight: '700',
-  },
+  container: { flex: 1, backgroundColor: '#0F172A', padding: 20 },
+  titulo: { fontSize: 24, fontWeight: 'bold', color: '#F8FAFC', marginBottom: 20, marginTop: 40 },
+  label: { fontSize: 14, color: '#94A3B8', marginBottom: 6 },
+  input: { backgroundColor: '#1E293B', color: '#F8FAFC', padding: 12, borderRadius: 8, borderWidth: 1, borderColor: '#334155', marginBottom: 16 },
+  inputFocado: { borderColor: '#38BDF8', backgroundColor: '#0F172A' },
+  switchArea: { flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 20 },
+  switchTexto: { color: '#CBD5E1', fontSize: 14 },
+  botao: { backgroundColor: '#0284C7', padding: 16, borderRadius: 8, alignItems: 'center' },
+  botaoPressionado: { opacity: 0.7, transform: [{ scale: 0.98 }] },
+  textoBotao: { color: '#FFFFFF', fontWeight: 'bold', fontSize: 14 },
 });
