@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Button } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 
+// 1. Array de dados local com informacoes detalhadas dos jogos (Etapa 11)
 const JOGOS = [
   {
     id: '1',
@@ -46,18 +47,19 @@ const JOGOS = [
 ];
 
 export default function DetalhesScreen() {
+  // 2. Etapa 10: Recupera o parâmetro 'id' vindo da rota dinâmica através do useLocalSearchParams
   const { id } = useLocalSearchParams();
   const router = useRouter();
 
+  // 3. Etapa 11: Localiza o jogo correspondente no array local usando o ID recebido
   const jogo = JOGOS.find((item) => item.id === id);
 
+  // Tratamento de caso o item nao seja encontrado
   if (!jogo) {
     return (
       <View style={styles.container}>
         <Text style={styles.erroText}>Jogo não encontrado!</Text>
-        <TouchableOpacity style={styles.botaoVoltar} onPress={() => router.back()}>
-          <Text style={styles.textoBotao}>[ Voltar ]</Text>
-        </TouchableOpacity>
+        <Button title="Voltar" onPress={() => router.back()} color="#4F46E5" />
       </View>
     );
   }
@@ -66,6 +68,7 @@ export default function DetalhesScreen() {
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.header}>Detalhes do Jogo</Text>
 
+      {/* Cartão de Detalhes exibindo o ID e as informações do item selecionado */}
       <View style={styles.card}>
         <Text style={styles.label}>Título:</Text>
         <Text style={styles.valorPrincipal}>{jogo.titulo}</Text>
@@ -76,11 +79,22 @@ export default function DetalhesScreen() {
         <Text style={styles.label}>ID:</Text>
         <Text style={styles.valor}>{jogo.id}</Text>
 
+        <Text style={styles.label}>Plataforma:</Text>
+        <Text style={styles.valor}>{jogo.plataforma}</Text>
+
+        <Text style={styles.label}>Nota:</Text>
+        <Text style={styles.valor}>{jogo.nota}</Text>
+
         <Text style={styles.label}>Descrição:</Text>
         <Text style={styles.descricao}>{jogo.descricao}</Text>
       </View>
 
-      <TouchableOpacity style={styles.botaoVoltar} onPress={() => router.back()}>
+      {/* 4. Etapa 12: Botão de navegação de retorno para a tela anterior via router.back() */}
+      <TouchableOpacity 
+        style={styles.botaoVoltar} 
+        onPress={() => router.back()}
+        activeOpacity={0.8}
+      >
         <Text style={styles.textoBotao}>[ Voltar ]</Text>
       </TouchableOpacity>
     </ScrollView>
