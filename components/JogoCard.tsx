@@ -1,9 +1,9 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { Link } from 'expo-router'; // Importação do Link (Etapa 7)
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { useRouter } from 'expo-router';
 
 type JogoCardProps = {
-  id: string; // Adicionado id para a rota
+  id: string;
   titulo: string;
   categoria: string;
   plataforma: string;
@@ -12,35 +12,33 @@ type JogoCardProps = {
 };
 
 export function JogoCard({ id, titulo, categoria, plataforma, nota, modoCompacto }: JogoCardProps) {
+  const router = useRouter();
+
+  const abrirDetalhes = () => {
+    router.push(`/detalhes/${id}`);
+  };
+
   if (modoCompacto) {
     return (
-      <View style={[styles.card, styles.cardCompacto]}>
+      <TouchableOpacity style={[styles.card, styles.cardCompacto]} onPress={abrirDetalhes}>
         <View style={{ flex: 1 }}>
           <Text style={styles.titulo}>{titulo}</Text>
         </View>
-
-        {/* Navegação declarativa com Link (Etapa 7) */}
-        <Link href={`/detalhes/${id}`} style={styles.linkDetalhes}>
-          Ver detalhes
-        </Link>
-      </View>
+        <Text style={styles.nota}>★ {nota}</Text>
+      </TouchableOpacity>
     );
   }
 
   return (
-    <View style={styles.card}>
+    <TouchableOpacity style={styles.card} onPress={abrirDetalhes}>
       <View style={styles.headerCard}>
         <Text style={styles.titulo}>{titulo}</Text>
         <Text style={styles.nota}>★ {nota}</Text>
       </View>
       <Text style={styles.categoria}>{categoria}</Text>
       <Text style={styles.plataforma}>{plataforma}</Text>
-
-      {/* Navegação declarativa com Link (Etapa 7) */}
-      <Link href={`/detalhes/${id}`} style={styles.linkDetalhes}>
-        Ver detalhes →
-      </Link>
-    </View>
+      <Text style={styles.textoBotao}>Ver detalhes →</Text>
+    </TouchableOpacity>
   );
 }
 
@@ -68,10 +66,5 @@ const styles = StyleSheet.create({
   nota: { fontSize: 14, fontWeight: '700', color: '#EAB308' },
   categoria: { fontSize: 13, color: '#4F46E5', marginTop: 4, fontWeight: '600' },
   plataforma: { fontSize: 12, color: '#64748B', marginTop: 2 },
-  linkDetalhes: {
-    marginTop: 10,
-    color: '#4F46E5',
-    fontWeight: '700',
-    fontSize: 14,
-  },
+  textoBotao: { marginTop: 10, color: '#4F46E5', fontWeight: '700', fontSize: 14 },
 });

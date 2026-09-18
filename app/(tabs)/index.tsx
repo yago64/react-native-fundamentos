@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, FlatList, Switch } from 'react-native';
-import { JogoCard } from '@/components/JogoCard';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import { JogoCard } from '../../components/JogoCard';
 
 const JOGOS = [
   { id: '1', titulo: 'Elden Ring', categoria: 'RPG / Soulslike', plataforma: 'PC / PS5 / Xbox', nota: '9.8' },
@@ -15,55 +15,48 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.headerTitle}>GamerVault</Text>
-      <Text style={styles.headerSubtitle}>Sua Biblioteca de Jogos</Text>
-
-      <View style={styles.switchContainer}>
-        <Text style={styles.switchText}>
-          {modoCompacto ? 'Modo Compacto' : 'Modo Detalhado'}
-        </Text>
-        <Switch
-          value={modoCompacto}
-          onValueChange={setModoCompacto}
-          trackColor={{ false: '#CBD5E1', true: '#818CF8' }}
-          thumbColor={modoCompacto ? '#4F46E5' : '#F1F5F9'}
-        />
+      <View style={styles.header}>
+        <Text style={styles.tituloHeader}>GamerVault</Text>
+        <TouchableOpacity 
+          style={styles.botaoAlternar} 
+          onPress={() => setModoCompacto(!modoCompacto)}
+        >
+          <Text style={styles.textoBotaoAlternar}>
+            {modoCompacto ? 'Modo Normal' : 'Modo Compacto'}
+          </Text>
+        </TouchableOpacity>
       </View>
 
       <FlatList
-          data={JOGOS}
-          keyExtractor={(item) => item.id}
-         renderItem={({ item }) => (
-    <JogoCard
-          id={item.id} 
-         titulo={item.titulo}
-         categoria={item.categoria}
-         plataforma={item.plataforma}
-        nota={item.nota}
-        modoCompacto={modoCompacto}
-    />
-  )}
-  contentContainerStyle={styles.listContainer}
-/>
+        data={JOGOS}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <JogoCard
+            id={item.id}
+            titulo={item.titulo}
+            categoria={item.categoria}
+            plataforma={item.plataforma}
+            nota={item.nota}
+            modoCompacto={modoCompacto}
+          />
+        )}
+        contentContainerStyle={styles.listContainer}
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20, paddingTop: 50, backgroundColor: '#F8FAFC' },
-  headerTitle: { fontSize: 26, fontWeight: '800', color: '#4F46E5' },
-  headerSubtitle: { fontSize: 14, color: '#64748B', marginBottom: 12 },
-  switchContainer: {
+  container: { flex: 1, backgroundColor: '#F8FAFC', paddingTop: 50 },
+  header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    padding: 12,
-    borderRadius: 8,
-    marginBottom: 16,
-    borderWidth: 1,
-    borderColor: '#E2E8F0',
+    paddingHorizontal: 16,
+    paddingBottom: 16,
   },
-  switchText: { fontSize: 14, fontWeight: '600', color: '#334155' },
-  listContainer: { paddingBottom: 20 },
+  tituloHeader: { fontSize: 24, fontWeight: '800', color: '#0F172A' },
+  botaoAlternar: { backgroundColor: '#4F46E5', paddingHorizontal: 12, paddingVertical: 6, borderRadius: 6 },
+  textoBotaoAlternar: { color: '#FFFFFF', fontWeight: '600', fontSize: 12 },
+  listContainer: { paddingHorizontal: 16, paddingBottom: 20 },
 });
