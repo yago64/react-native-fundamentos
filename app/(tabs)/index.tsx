@@ -15,7 +15,6 @@ export default function HomeScreen() {
       <Text style={styles.headerTitle}>GamerVault</Text>
       <Text style={styles.headerSubtitle}>Sua Biblioteca de Jogos</Text>
 
-      {/* Implementação do FlatList (Etapa 3) */}
       <FlatList
         data={JOGOS}
         keyExtractor={(item) => item.id}
