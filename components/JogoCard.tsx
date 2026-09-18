@@ -7,8 +7,6 @@ type JogoCardProps = {
   categoria: string;
   plataforma: string;
   nota: string;
-  modoCompacto?: boolean;
-  onPress: () => void;
 };
 
 export function JogoCard({
@@ -43,7 +41,6 @@ export function JogoCard({
 const styles = StyleSheet.create({
   card: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 12,
     padding: 16,
     marginBottom: 12,
     borderWidth: 1,
