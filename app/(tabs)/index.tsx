@@ -1,62 +1,89 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
-import { JogoCard } from '../../components/JogoCard';
+import { View, Text, FlatList, StyleSheet } from 'react-native';
+import JogoCard, { JogoItem } from '@/components/JogoCard';
 
-const JOGOS = [
-  { id: '1', titulo: 'Elden Ring', categoria: 'RPG / Soulslike', plataforma: 'PC / PS5 / Xbox', nota: '9.8' },
-  { id: '2', titulo: 'God of War Ragnarök', categoria: 'Ação / Aventura', plataforma: 'PS4 / PS5', nota: '9.6' },
-  { id: '3', titulo: 'The Witcher 3: Wild Hunt', categoria: 'RPG de Ação', plataforma: 'PC / Consoles', nota: '9.7' },
-  { id: '4', titulo: 'Hollow Knight', categoria: 'Metroidvania', plataforma: 'PC / Switch / Consoles', nota: '9.5' },
-  { id: '5', titulo: 'Cyberpunk 2077', categoria: 'RPG Ficção Científica', plataforma: 'PC / PS5 / Xbox Series', nota: '8.9' },
+// Dados da Lista
+const DADOS_JOGOS: JogoItem[] = [
+  { id: '1', titulo: 'Elden Ring', categoria: 'RPG / Soulslike' },
+  { id: '2', titulo: 'God of War Ragnarök', categoria: 'Ação / Aventura' },
+  { id: '3', titulo: 'The Witcher 3: Wild Hunt', categoria: 'RPG de Ação' },
+  { id: '4', titulo: 'Hollow Knight', categoria: 'Metroidvania' },
+  { id: '5', titulo: 'Cyberpunk 2077', categoria: 'RPG Ficção Científica' },
+];
+
+// Requisito da Etapa 7: Tecnologias Utilizadas
+const PACOTES_UTILIZADOS = [
+  'Expo Router (Navegação)',
+  '@expo/vector-icons (Ícones)',
+  'React Native Paper (Componentes)',
+  'Date-fns (Datas)',
+  'Uuid (Identificadores)',
 ];
 
 export default function HomeScreen() {
-  const [modoCompacto, setModoCompacto] = useState(false);
+  // State com os dados dos jogos (Etapa 13)
+  const [listaJogos] = useState<JogoItem[]>(DADOS_JOGOS);
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.tituloHeader}>GamerVault</Text>
-        <TouchableOpacity 
-          style={styles.botaoAlternar} 
-          onPress={() => setModoCompacto(!modoCompacto)}
-        >
-          <Text style={styles.textoBotaoAlternar}>
-            {modoCompacto ? 'Modo Normal' : 'Modo Compacto'}
-          </Text>
-        </TouchableOpacity>
-      </View>
+      <Text style={styles.header}>🎮 Biblioteca GamerVault</Text>
 
+      {/* FlatList com o componente reutilizavel JogoCard */}
       <FlatList
-        data={JOGOS}
+        data={listaJogos}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <JogoCard
-            id={item.id}
-            titulo={item.titulo}
-            categoria={item.categoria}
-            plataforma={item.plataforma}
-            nota={item.nota}
-            modoCompacto={modoCompacto}
-          />
-        )}
+        renderItem={({ item }) => <JogoCard item={item} />}
         contentContainerStyle={styles.listContainer}
+
+        ListFooterComponent={
+          <View style={styles.techSection}>
+            <Text style={styles.techTitle}>Tecnologias utilizadas:</Text>
+            {PACOTES_UTILIZADOS.map((pacote, index) => (
+              <Text key={index} style={styles.techItem}>
+                • {pacote}
+              </Text>
+            ))}
+          </View>
+        }
       />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F8FAFC', paddingTop: 50 },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+  container: {
+    flex: 1,
+    backgroundColor: '#0F172A',
+    paddingTop: 50,
     paddingHorizontal: 16,
-    paddingBottom: 16,
   },
-  tituloHeader: { fontSize: 24, fontWeight: '800', color: '#0F172A' },
-  botaoAlternar: { backgroundColor: '#4F46E5', paddingHorizontal: 12, paddingVertical: 6, borderRadius: 6 },
-  textoBotaoAlternar: { color: '#FFFFFF', fontWeight: '600', fontSize: 12 },
-  listContainer: { paddingHorizontal: 16, paddingBottom: 20 },
+  header: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#F8FAFC',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  listContainer: {
+    paddingBottom: 24,
+  },
+  techSection: {
+    marginTop: 20,
+    padding: 16,
+    backgroundColor: '#1E293B',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#334155',
+  },
+  techTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#38BDF8',
+    marginBottom: 8,
+  },
+  techItem: {
+    fontSize: 14,
+    color: '#94A3B8',
+    marginBottom: 4,
+  },
 });
