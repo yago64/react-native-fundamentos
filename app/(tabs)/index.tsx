@@ -11,7 +11,6 @@ const JOGOS = [
 ];
 
 export default function HomeScreen() {
-  // Declaração do State (Etapa 5)
   const [modoCompacto, setModoCompacto] = useState(false);
 
   return (
@@ -32,19 +31,20 @@ export default function HomeScreen() {
       </View>
 
       <FlatList
-        data={JOGOS}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <JogoCard
-            titulo={item.titulo}
-            categoria={item.categoria}
-            plataforma={item.plataforma}
-            nota={item.nota}
-            modoCompacto={modoCompacto}
-          />
-        )}
-        contentContainerStyle={styles.listContainer}
-      />
+          data={JOGOS}
+          keyExtractor={(item) => item.id}
+         renderItem={({ item }) => (
+    <JogoCard
+          id={item.id} 
+         titulo={item.titulo}
+         categoria={item.categoria}
+         plataforma={item.plataforma}
+        nota={item.nota}
+        modoCompacto={modoCompacto}
+    />
+  )}
+  contentContainerStyle={styles.listContainer}
+/>
     </View>
   );
 }
