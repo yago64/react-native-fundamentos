@@ -1,9 +1,19 @@
+import { UserProvider } from '@/context/UserContext';
+import { Stack, Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { Tabs } from 'expo-router';
 
-// cspell:ignore Biblioteca cadastro Cadastro
+export default function RootLayout() {
+  return (
+    <UserProvider>
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="detalhes/[id]" />
+      </Stack>
+    </UserProvider>
+  );
+}
 
-export default function TabLayout() {
+export function TabLayout() {
   return (
     <Tabs
       screenOptions={{
