@@ -3,7 +3,6 @@ import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { FlatList, StyleSheet, Switch, Text, View } from 'react-native';
 
-// Array com 5 elementos (Etapa 2)
 const JOGOS = [
   {
     id: '1',
@@ -56,7 +55,6 @@ export default function HomeScreen() {
       <Text style={styles.headerTitle}>GamerVault</Text>
       <Text style={styles.headerSubtitle}>Sua Biblioteca de Jogos</Text>
 
-      {/* Controle de State para Modo Compacto (Etapa 5) */}
       <View style={styles.switchArea}>
         <Text style={styles.switchLabel}>
           {modoCompacto ? 'Modo Compacto Ativado' : 'Modo Normal'}
@@ -69,7 +67,6 @@ export default function HomeScreen() {
         />
       </View>
 
-      {/* FlatList renderizando o componente reutilizável JogoCard (Etapas 3 e 4) */}
       <FlatList
         data={JOGOS}
         keyExtractor={(item) => item.id}
