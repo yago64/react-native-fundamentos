@@ -1,5 +1,6 @@
+import { JogoCard } from '@/components/JogoCard';
 import React from 'react';
-import { View, Text, StyleSheet, FlatList } from 'react-native';
+import { FlatList, StyleSheet, Text, View } from 'react-native';
 
 const JOGOS = [
   { id: '1', titulo: 'Elden Ring', categoria: 'RPG / Soulslike', plataforma: 'PC / PS5 / Xbox', nota: '9.8' },
@@ -19,10 +20,14 @@ export default function HomeScreen() {
         data={JOGOS}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <View style={styles.cardItem}>
-            <Text style={styles.tituloJogo}>{item.titulo}</Text>
-            <Text style={styles.categoriaJogo}>{item.categoria} • ★ {item.nota}</Text>
-          </View>
+          <JogoCard
+            id={item.id}
+            titulo={item.titulo}
+            categoria={item.categoria}
+            plataforma={item.plataforma}
+            nota={item.nota}
+            onPress={() => {}}
+          />
         )}
         contentContainerStyle={styles.listContainer}
       />
