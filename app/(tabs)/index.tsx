@@ -1,79 +1,80 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import { JogoCard } from '@/components/JogoCard';
+import { useRouter } from 'expo-router';
+import React, { useState } from 'react';
+import { FlatList, StyleSheet, Switch, Text, View } from 'react-native';
 
-import { HeaderCadastro } from '@/components/HeaderCadastro';
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+// Array com 5 elementos (Etapa 2)
+const JOGOS = [
+  { id: '1', titulo: 'Elden Ring', categoria: 'RPG / Soulslike', plataforma: 'PC / PS5 / Xbox', nota: '9.8', descricao: 'Um RPG de ação num mundo aberto épico e desafiador.' },
+  { id: '2', titulo: 'God of War Ragnarök', categoria: 'Ação / Aventura', plataforma: 'PS4 / PS5', nota: '9.6', descricao: 'Jornada épica de Kratos e Atreus pela mitologia nórdica.' },
+  { id: '3', titulo: 'The Witcher 3', categoria: 'RPG', plataforma: 'PC / Consoles', nota: '9.7', descricao: 'Geralt de Rívia em busca da Criança da Profecia.' },
+  { id: '4', titulo: 'Hollow Knight', categoria: 'Metroidvania', plataforma: 'PC / Switch / Consoles', nota: '9.5', descricao: 'Aventura 2D num vasto reino em ruínas de insetos e heróis.' },
+  { id: '5', titulo: 'Cyberpunk 2077', categoria: 'RPG de Ação', plataforma: 'PC / PS5 / Xbox Series', nota: '8.9', descricao: 'Mergulhe na metrópole futurista de Night City.' },
+];
 
 export default function HomeScreen() {
+  const router = useRouter();
+  const [modoCompacto, setModoCompacto] = useState(false);
+
   return (
-    <ThemedView>
-      <HeaderCadastro titulo="GamerVault" subtitulo="" />
-      <ParallaxScrollView
-        headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-        headerImage={
-          <Image
-            source={require('@/assets/images/partial-react-logo.png')}
-            style={styles.reactLogo}
+    <View style={styles.container}>
+      <Text style={styles.headerTitle}>GamerVault</Text>
+      <Text style={styles.headerSubtitle}>Sua Biblioteca de Jogos</Text>
+
+      {/* Controle de State para Modo Compacto (Etapa 5) */}
+      <View style={styles.switchArea}>
+        <Text style={styles.switchLabel}>
+          {modoCompacto ? 'Modo Compacto Ativado' : 'Modo Normal'}
+        </Text>
+        <Switch
+          value={modoCompacto}
+          onValueChange={setModoCompacto}
+          trackColor={{ false: '#CBD5E1', true: '#818CF8' }}
+          thumbColor={modoCompacto ? '#4F46E5' : '#F1F5F9'}
+        />
+      </View>
+
+      {/* FlatList renderizando o componente reutilizável JogoCard (Etapas 3 e 4) */}
+      <FlatList
+        data={JOGOS}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <JogoCard
+            id={item.id}
+            titulo={item.titulo}
+            categoria={item.categoria}
+            plataforma={item.plataforma}
+            nota={item.nota}
+            modoCompacto={modoCompacto}
+            onPress={() =>
+              router.push({
+                pathname: '/detalhes/[id]' as any,
+                params: { id: item.id },
+              })
+            }
           />
-        }>
-        <ThemedView style={styles.titleContainer}>
-          <ThemedText type="title">Welcome!</ThemedText>
-          <HelloWave />
-        </ThemedView>
-        <ThemedView style={styles.stepContainer}>
-          <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-          <ThemedText>
-            Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-            Press{' '}
-            <ThemedText type="defaultSemiBold">
-              {Platform.select({ ios: 'cmd + d', android: 'cmd + m', web: 'F12' })}
-            </ThemedText>{' '}
-            to open developer tools.
-          </ThemedText>
-        </ThemedView>
-        <ThemedView style={styles.stepContainer}>
-          <Link href="/modal">
-            <Link.Trigger>
-              <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-            </Link.Trigger>
-            <Link.Preview />
-            <Link.Menu>
-              <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-              <Link.MenuAction title="Share" icon="square.and.arrow.up" onPress={() => alert('Share pressed')} />
-              <Link.Menu title="More" icon="ellipsis">
-                <Link.MenuAction title="Delete" icon="trash" destructive onPress={() => alert('Delete pressed')} />
-              </Link.Menu>
-            </Link.Menu>
-          </Link>
-          <ThemedText>{`Tap the Explore tab to learn more about what's included in this starter app.`}</ThemedText>
-        </ThemedView>
-        <ThemedView style={styles.stepContainer}>
-          <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-          <ThemedText>
-            {`When you're ready, run `}
-            <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-            <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-            <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-            <ThemedText type="defaultSemiBold">app-example</ThemedText>
-          </ThemedText>
-        </ThemedView>
-      </ParallaxScrollView>
-    </ThemedView>
+        )}
+        contentContainerStyle={styles.listContainer}
+      />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  stepContainer: { gap: 8, marginBottom: 8 },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  container: { flex: 1, padding: 20, paddingTop: 50, backgroundColor: '#F8FAFC' },
+  headerTitle: { fontSize: 26, fontWeight: '800', color: '#4F46E5' },
+  headerSubtitle: { fontSize: 14, color: '#64748B', marginBottom: 16 },
+  switchArea: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    padding: 12,
+    borderRadius: 10,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
   },
+  switchLabel: { fontSize: 14, fontWeight: '600', color: '#334155' },
+  listContainer: { paddingBottom: 20 },
 });
