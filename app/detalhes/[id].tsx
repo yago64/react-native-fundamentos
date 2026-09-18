@@ -1,168 +1,96 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Button } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
 
-// 1. Array de dados local com informacoes detalhadas dos jogos (Etapa 11)
-const JOGOS = [
-  {
-    id: '1',
-    titulo: 'Elden Ring',
-    categoria: 'RPG / Soulslike',
-    plataforma: 'PC / PS5 / Xbox',
-    nota: '9.8',
-    descricao: 'Um RPG de ação em mundo aberto sombrio e expansivo, onde você explora as Terras Intermédias para se tornar o Prístino Lorde.',
-  },
-  {
-    id: '2',
-    titulo: 'God of War Ragnarök',
-    categoria: 'Ação / Aventura',
-    plataforma: 'PS4 / PS5',
-    nota: '9.6',
-    descricao: 'Kratos e Atreus embarcam em uma jornada mítica pelos Nove Reinos enquanto o fim dos tempos se aproxima nas terras nórdicas.',
-  },
-  {
-    id: '3',
-    titulo: 'The Witcher 3: Wild Hunt',
-    categoria: 'RPG de Ação',
-    plataforma: 'PC / Consoles',
-    nota: '9.7',
-    descricao: 'Geralt de Rívia busca Ciri, a Criança da Profecia, enquanto navega por um mundo devastado pela guerra e repleto de monstros.',
-  },
-  {
-    id: '4',
-    titulo: 'Hollow Knight',
-    categoria: 'Metroidvania',
-    plataforma: 'PC / Switch / Consoles',
-    nota: '9.5',
-    descricao: 'Uma aventura de ação clássica em 2D por um vasto reino arruinado de insetos e heróis com estilo visual desenhado à mão.',
-  },
-  {
-    id: '5',
-    titulo: 'Cyberpunk 2077',
-    categoria: 'RPG Ficção Científica',
-    plataforma: 'PC / PS5 / Xbox Series',
-    nota: '8.9',
-    descricao: 'Um RPG de ação em mundo aberto ambientado na megalópole de Night City, uma metrópole obcecada por poder, glamour e modificações corporais.',
-  },
+const DADOS_JOGOS = [
+  { id: '1', titulo: 'Elden Ring', categoria: 'RPG / Soulslike', descricao: 'Um RPG de ação num mundo aberto épico criado por Hidetaka Miyazaki e George R. R. Martin.' },
+  { id: '2', titulo: 'God of War Ragnarök', categoria: 'Ação / Aventura', descricao: 'Junte-se a Kratos e Atreus numa jornada mítica em busca de respostas antes do Ragnarök.' },
+  { id: '3', titulo: 'The Witcher 3: Wild Hunt', categoria: 'RPG de Ação', descricao: 'Embarque na caçada à Ciri num mundo devastado pela guerra e cheio de monstros.' },
+  { id: '4', titulo: 'Hollow Knight', categoria: 'Metroidvania', descricao: 'Explore o reino em ruínas de Hallownest nesta aventura 2D aclamada.' },
+  { id: '5', titulo: 'Cyberpunk 2077', categoria: 'RPG Ficção Científica', descricao: 'Seja um mercenário fora da lei em Night City, uma megalópole obcecada por poder e modificações corporais.' },
 ];
 
 export default function DetalhesScreen() {
-  // 2. Etapa 10: Recupera o parâmetro 'id' vindo da rota dinâmica através do useLocalSearchParams
   const { id } = useLocalSearchParams();
   const router = useRouter();
 
-  // 3. Etapa 11: Localiza o jogo correspondente no array local usando o ID recebido
-  const jogo = JOGOS.find((item) => item.id === id);
-
-  // Tratamento de caso o item nao seja encontrado
-  if (!jogo) {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.erroText}>Jogo não encontrado!</Text>
-        <Button title="Voltar" onPress={() => router.back()} color="#4F46E5" />
-      </View>
-    );
-  }
+  // Busca o jogo correspondente ao parâmetro recebido da URL
+  const jogo = DADOS_JOGOS.find((j) => j.id === id);
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.header}>Detalhes do Jogo</Text>
-
-      {/* Cartão de Detalhes exibindo o ID e as informações do item selecionado */}
-      <View style={styles.card}>
-        <Text style={styles.label}>Título:</Text>
-        <Text style={styles.valorPrincipal}>{jogo.titulo}</Text>
-
-        <Text style={styles.label}>Categoria:</Text>
-        <Text style={styles.valor}>{jogo.categoria}</Text>
-
-        <Text style={styles.label}>ID:</Text>
-        <Text style={styles.valor}>{jogo.id}</Text>
-
-        <Text style={styles.label}>Plataforma:</Text>
-        <Text style={styles.valor}>{jogo.plataforma}</Text>
-
-        <Text style={styles.label}>Nota:</Text>
-        <Text style={styles.valor}>{jogo.nota}</Text>
-
-        <Text style={styles.label}>Descrição:</Text>
-        <Text style={styles.descricao}>{jogo.descricao}</Text>
-      </View>
-
-      {/* 4. Etapa 12: Botão de navegação de retorno para a tela anterior via router.back() */}
-      <TouchableOpacity 
-        style={styles.botaoVoltar} 
-        onPress={() => router.back()}
-        activeOpacity={0.8}
-      >
-        <Text style={styles.textoBotao}>[ Voltar ]</Text>
+    <View style={styles.container}>
+      {/* Botão de Retorno utilizando router.back() */}
+      <TouchableOpacity style={styles.btnVoltar} onPress={() => router.back()}>
+        <Ionicons name="arrow-back" size={20} color="#FFFFFF" />
+        <Text style={styles.textoVoltar}>Voltar</Text>
       </TouchableOpacity>
-    </ScrollView>
+
+      {jogo ? (
+        <View style={styles.cardDetalhes}>
+          <Text style={styles.idTag}>ID da Rota: {jogo.id}</Text>
+          <Text style={styles.titulo}>{jogo.titulo}</Text>
+          <Text style={styles.categoria}>{jogo.categoria}</Text>
+          <Text style={styles.descricao}>{jogo.descricao}</Text>
+        </View>
+      ) : (
+        <Text style={styles.erro}>Jogo não encontrado para o ID: {id}</Text>
+      )}
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
+    flex: 1,
     backgroundColor: '#0F172A',
-    padding: 24,
-    justifyContent: 'center',
-  },
-  header: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#F8FAFC',
-    marginBottom: 20,
-    textAlign: 'center',
-  },
-  card: {
-    backgroundColor: '#1E293B',
     padding: 20,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: '#334155',
-    marginBottom: 24,
+    paddingTop: 50,
   },
-  label: {
-    fontSize: 14,
-    color: '#94A3B8',
-    marginTop: 12,
+  btnVoltar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 20,
+  },
+  textoVoltar: {
+    color: '#FFFFFF',
+    fontSize: 16,
     fontWeight: '600',
   },
-  valorPrincipal: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#38BDF8',
-    marginTop: 4,
+  cardDetalhes: {
+    backgroundColor: '#1E293B',
+    padding: 20,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: '#334155',
   },
-  valor: {
-    fontSize: 16,
-    color: '#F1F5F9',
-    marginTop: 2,
-    fontWeight: '500',
+  idTag: {
+    color: '#38BDF8',
+    fontSize: 12,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  titulo: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#F8FAFC',
+    marginBottom: 6,
+  },
+  categoria: {
+    fontSize: 14,
+    color: '#94A3B8',
+    marginBottom: 16,
   },
   descricao: {
-    fontSize: 14,
+    fontSize: 15,
     color: '#CBD5E1',
-    marginTop: 4,
-    lineHeight: 20,
+    lineHeight: 22,
   },
-  erroText: {
-    fontSize: 18,
+  erro: {
     color: '#EF4444',
-    textAlign: 'center',
-    marginBottom: 20,
-  },
-  botaoVoltar: {
-    backgroundColor: '#334155',
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 8,
-    alignSelf: 'center',
-  },
-  textoBotao: {
-    color: '#F8FAFC',
-    fontWeight: 'bold',
     fontSize: 16,
+    textAlign: 'center',
+    marginTop: 40,
   },
 });
