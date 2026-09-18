@@ -19,7 +19,6 @@ export default function HomeScreen() {
       <Text style={styles.headerTitle}>GamerVault</Text>
       <Text style={styles.headerSubtitle}>Sua Biblioteca de Jogos</Text>
 
-      {/* Controle de Interação / Switch (Etapa 5) */}
       <View style={styles.switchContainer}>
         <Text style={styles.switchText}>
           {modoCompacto ? 'Modo Compacto' : 'Modo Detalhado'}
